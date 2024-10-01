@@ -1,7 +1,7 @@
 <?php
 // Start the session and include necessary files
 session_start();
-include './connections/db.php';
+include '../connections/db.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
@@ -22,7 +22,7 @@ function fetch_data($query)
 }
 
 // Fetch user information
-include 'user-info.php';
+include '../user-info.php';
 $recent_activities = fetch_data("SELECT * FROM activities WHERE username = '$username' ORDER BY date DESC LIMIT 5");
 $total_users = fetch_data("SELECT COUNT(*) as count FROM club_members")[0]['count'];
 $total_posts = fetch_data("SELECT COUNT(*) as count FROM posts")[0]['count'];
@@ -37,23 +37,23 @@ $total_clubs = fetch_data("SELECT COUNT(*) as count FROM clubs")[0]['count'];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>School Club Event Planner - Dashboard</title>
+    <title>School Club Event Planner - Member Dashboard</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="admin/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../admin/plugins/fontawesome-free/css/all.min.css">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="admin/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../admin/dist/css/adminlte.min.css">
 
     <!-- Chart.js -->
-    <script src="admin/plugins/chart.js/Chart.min.js"></script>
+    <script src="../admin/plugins/chart.js/Chart.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <?php include 'sidebar.php' ?>
+    <?php include '../user/member_sidebar.php' ?>
 
     <div class="content-wrapper" style="max-height: 600px; overflow-y: auto;">
         <!-- Content Header -->
@@ -61,55 +61,7 @@ $total_clubs = fetch_data("SELECT COUNT(*) as count FROM clubs")[0]['count'];
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Dashboard</h1>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-2 col-6">
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3><?php echo htmlspecialchars($total_users); ?></h3>
-                                <p>Total Users</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Total Clubs -->
-                    <div class="col-lg-2 col-6">
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3><?php echo htmlspecialchars($total_clubs); ?></h3>
-                                <p>Total Clubs</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-people-carry"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-6">
-                        <div class="small-box bg-primary">
-                            <div class="inner">
-                                <h3><?php echo htmlspecialchars($total_events); ?></h3>
-                                <p>Total Events</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-flag"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-6">
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3><?php echo htmlspecialchars($total_posts); ?></h3>
-                                <p>Total Posts</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                        </div>
+                        <h1 class="m-0">Member Dashboard</h1>
                     </div>
                 </div>
 
@@ -168,11 +120,11 @@ $total_clubs = fetch_data("SELECT COUNT(*) as count FROM clubs")[0]['count'];
 
 
     <!-- jQuery -->
-    <script src="admin/plugins/jquery/jquery.min.js"></script>
+    <script src="../admin/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="admin/dist/js/adminlte.min.js"></script>
+    <script src="../admin/dist/js/adminlte.min.js"></script>
     <!-- Chart.js Script for Bar Graph -->
     <script>
         $(function() {

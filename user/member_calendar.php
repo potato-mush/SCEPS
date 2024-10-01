@@ -1,7 +1,7 @@
 <?php
 // Start the session and include necessary files
 session_start();
-include './connections/db.php';
+include '../connections/db.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
@@ -22,13 +22,10 @@ function fetch_data($query)
 }
 
 // Fetch user information
-include 'user-info.php';
+include '../user-info.php';
 $recent_activities = fetch_data("SELECT * FROM activities WHERE username = '$username' ORDER BY date DESC LIMIT 5");
 $total_users = fetch_data("SELECT COUNT(*) as count FROM club_members")[0]['count'];
 $total_posts = fetch_data("SELECT COUNT(*) as count FROM posts")[0]['count'];
-
-// Fetch clubs from the database
-$clubs = fetch_data("SELECT club_id, club_name FROM clubs");
 ?>
 
 <!DOCTYPE html>
@@ -43,16 +40,16 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="admin/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../admin/plugins/fontawesome-free/css/all.min.css">
 
     <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="../admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="admin/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../admin/dist/css/adminlte.min.css">
 
     <!-- fullCalendar -->
-    <link rel="stylesheet" href="admin/plugins/fullcalendar/main.css">
+    <link rel="stylesheet" href="../admin/plugins/fullcalendar/main.css">
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -69,7 +66,7 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Sidebar -->
-        <?php include 'sidebar.php'; ?>
+        <?php include '../user/member_sidebar.php'; ?>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -120,15 +117,6 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
                                 <textarea class="form-control" id="eventDescription" rows="3"></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="clubSelect" class="form-label">Select Club</label>
-                                <select class="form-control" id="clubSelect" required>
-                                    <option value="" disabled selected>Select a club</option>
-                                    <?php foreach ($clubs as $club): ?>
-                                        <option value="<?php echo $club['club_id']; ?>"><?php echo htmlspecialchars($club['club_name']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="mb-3">
                                 <label for="eventDate" class="form-label">Event Date</label>
                                 <input type="date" class="form-control" id="eventDate" required>
                             </div>
@@ -147,25 +135,29 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="deleteEventBtn">Delete Event</button>
-                        <button type="button" class="btn btn-primary" id="saveEventBtn">Save changes</button>
+                        <?php if ($_SESSION['role'] == 'admin') : ?>
+                            <!-- Show Save and Delete buttons only for admin -->
+                            <button type="button" class="btn btn-danger" id="deleteEventBtn">Delete Event</button>
+                            <button type="button" class="btn btn-primary" id="saveEventBtn">Save changes</button>
+                        <?php endif; ?>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
     <!-- jQuery -->
-    <script src="admin/plugins/jquery/jquery.min.js"></script>
+    <script src="../admin/plugins/jquery/jquery.min.js"></script>
     <!-- jQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <!-- FullCalendar -->
-    <script src="admin/plugins/moment/moment.min.js"></script>
-    <script src="admin/plugins/fullcalendar/main.js"></script>
+    <script src="../admin/plugins/moment/moment.min.js"></script>
+    <script src="../admin/plugins/fullcalendar/main.js"></script>
     <!-- AdminLTE App -->
-    <script src="admin/dist/js/adminlte.min.js"></script>
+    <script src="../admin/dist/js/adminlte.min.js"></script>
 
     <script>
         $(function() {
@@ -177,11 +169,11 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 themeSystem: 'bootstrap',
-                editable: true,
-                droppable: true,
+                editable: false, // Prevent users from dragging or resizing events
+                droppable: false, // Prevent external events from being dropped
                 events: function(fetchInfo, successCallback, failureCallback) {
                     $.ajax({
-                        url: 'add-events.php',
+                        url: '../add-events.php',
                         type: 'POST',
                         data: {
                             action: 'fetch-calendar'
@@ -195,8 +187,7 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
                                     start: event.event_date + 'T' + (event.start_time || '00:00'),
                                     end: event.event_date + 'T' + (event.end_time || '23:59'),
                                     description: event.event_description,
-                                    location: event.location,
-                                    club_id: event.club_id // Include club_id
+                                    location: event.location
                                 };
                             });
                             successCallback(events);
@@ -211,129 +202,21 @@ $clubs = fetch_data("SELECT club_id, club_name FROM clubs");
                     $('#eventTitle').val(info.event.title);
                     $('#eventDescription').val(info.event.extendedProps.description);
                     $('#eventDate').val(info.event.startStr.split('T')[0]);
-                    $('#startTime').val(moment(info.event.start));
-                    $('#endTime').val(moment(info.event.end));
+                    $('#startTime').val(info.event.startStr.split('T')[1] || '00:00');
+                    $('#endTime').val(info.event.endStr.split('T')[1] || '23:59');
                     $('#eventLocation').val(info.event.extendedProps.location);
-                    $('#clubSelect').val(info.event.extendedProps.club_id); // Set selected club
                     $('#eventModal').modal('show');
                 },
                 dateClick: function(info) {
-                    $('#eventId').val('');
-                    $('#eventTitle').val('');
-                    $('#eventDescription').val('');
-                    $('#eventDate').val(info.dateStr);
-                    $('#startTime').val('00:00');
-                    $('#endTime').val('23:59');
-                    $('#eventLocation').val('');
-                    $('#eventModal').modal('show');
+                    // Disable creating events via dateClick for users
+                    alert('You do not have permission to create events.');
                 },
-                eventDrop: function(info) {
-                    $.ajax({
-                        url: 'add-events.php',
-                        type: 'POST',
-                        data: {
-                            action: 'update',
-                            id: info.event.id,
-                            name: info.event.title,
-                            description: info.event.extendedProps.description,
-                            date: info.event.startStr.split('T')[0],
-                            start_time: info.event.startStr.split('T')[1] || null,
-                            end_time: info.event.endStr.split('T')[1] || null,
-                            location: info.event.extendedProps.location
-                        },
-                        success: function() {
-                            console.log('Event updated');
-                        }
-                    });
-                }
             });
 
             calendar.render();
 
-            // Save Event Button
-            $('#saveEventBtn').click(function() {
-                var id = $('#eventId').val();
-                var title = $('#eventTitle').val().trim();
-                var description = $('#eventDescription').val().trim();
-                var date = $('#eventDate').val();
-                var startTime = $('#startTime').val().trim();
-                var endTime = $('#endTime').val().trim();
-                var location = $('#eventLocation').val().trim();
-
-                // Client-side validation
-                if (!title) {
-                    alert('Event title is required.');
-                    return;
-                }
-                if (!date) {
-                    alert('Event date is required.');
-                    return;
-                }
-                if (!startTime) {
-                    alert('Start time is required.');
-                    return;
-                }
-                if (!endTime) {
-                    alert('End time is required.');
-                    return;
-                }
-
-                var startTime = $('#startTime').val().trim(); // Should already be in 12-hour format
-                var endTime = $('#endTime').val().trim(); // Should already be in 12-hour format
-
-                $.ajax({
-                    url: 'add-events.php',
-                    type: 'POST',
-                    data: {
-                        action: 'update',
-                        id: id,
-                        name: title,
-                        description: description,
-                        date: date,
-                        start_time: startTime, // In 12-hour format
-                        end_time: endTime, // In 12-hour format
-                        location: location,
-                        club_id: $('#clubSelect').val()
-                    },
-                    success: function(response) {
-                        $('#eventModal').modal('hide');
-                        calendar.refetchEvents();
-                    },
-                    error: function() {
-                        alert('Failed to save event');
-                    }
-                });
-            });
-
-            // Delete Event Button
-            $('#deleteEventBtn').click(function() {
-                var id = $('#eventId').val();
-                if (id) {
-                    if (confirm('Are you sure you want to delete this event?')) {
-                        $.ajax({
-                            url: 'add-events.php',
-                            type: 'POST',
-                            data: {
-                                action: 'delete',
-                                id: id
-                            },
-                            success: function(response) {
-                                if (response.trim() === 'Event deleted successfully') {
-                                    $('#eventModal').modal('hide');
-                                    calendar.refetchEvents();
-                                } else {
-                                    alert('Failed to delete event');
-                                }
-                            },
-                            error: function() {
-                                alert('Failed to connect to the server');
-                            }
-                        });
-                    }
-                } else {
-                    alert('No event selected for deletion.');
-                }
-            });
+            // Disable Save/Delete buttons for users
+            $('#saveEventBtn, #deleteEventBtn').hide();
         });
     </script>
 </body>
