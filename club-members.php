@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_members'])) {
                                                                 <?php if (!empty($member['image'])): ?>
                                                                     <img src="data:image/jpeg;base64,<?php echo base64_encode($member['image']); ?>" alt="Profile Image" width="75" height="75" class="img-circle">
                                                                 <?php else: ?>
-                                                                    <img src="admin/AdminLTE/dist/img/default.jpg" alt="Default Image" width="75" height="75" class="img-circle">
+                                                                    <img src="admin/dist/img/default.jpg" alt="Default Image" width="75" height="75" class="img-circle">
                                                                 <?php endif; ?>
                                                             </div>
                                                         </td>
@@ -204,50 +204,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_members'])) {
                                                 </li>
                                             </ul>
                                         </nav>
-
-                                        <!-- Success Modal -->
-                                        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content border-success">
-                                                    <div class="modal-header bg-success text-white">
-                                                        <h5 class="modal-title" id="successModalLabel">Success</h5>
-                                                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <?php echo $_SESSION['success']; ?>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Error Modal -->
-                                        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="errorModalLabel">Error</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <?php echo $_SESSION['error']; ?>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
             </form>
+        </div>
+    </div>
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content border-success">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?php echo $_SESSION['success']; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?php echo $_SESSION['error']; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Add Member Modal -->
@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_members'])) {
                         <div class="form-group text-center">
                             <label>Profile Image</label><br>
                             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <img id="imagePreview" src="admin/AdminLTE/dist/img/default.jpg" alt="Image Preview"
+                                <img id="imagePreview" src="admin/dist/img/default.jpg" alt="Image Preview"
                                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; cursor: pointer;"
                                     onclick="document.getElementById('image').click();">
                                 <input type="file" id="image" name="image" accept="image/*" style="display: none;" onchange="previewImage(event)">
@@ -357,8 +357,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_members'])) {
                 $('#errorModal').modal('show');
             <?php endif; ?>
         });
-    </script>
-    <script>
         // Show success modal with delay if the success message is set
         <?php if (isset($_SESSION['success'])): ?>
             setTimeout(function() {

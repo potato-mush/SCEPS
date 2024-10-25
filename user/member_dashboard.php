@@ -1,7 +1,7 @@
 <?php
 // Start the session and include necessary files
 session_start();
-include './connections/db.php';
+include '../connections/db.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
@@ -83,13 +83,13 @@ $total_clubs = fetch_data("SELECT COUNT(*) as count FROM clubs")[0]['count'];
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="admin/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../admin/plugins/fontawesome-free/css/all.min.css">
 
     <!-- Theme style -->
-    <link rel="stylesheet" href="admin/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../admin/dist/css/adminlte.min.css">
 
     <!-- Chart.js -->
-    <script src="admin/plugins/chart.js/Chart.min.js"></script>
+    <script src="../admin/plugins/chart.js/Chart.min.js"></script>
     <style>
         .event-list {
             max-height: 300px;
@@ -117,7 +117,7 @@ $total_clubs = fetch_data("SELECT COUNT(*) as count FROM clubs")[0]['count'];
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <?php include 'sidebar.php' ?>
+    <?php include 'member_sidebar.php' ?>
 
     <div class="content-wrapper" style="max-height: 600px; overflow-y: auto;">
         <!-- Content Header -->
@@ -260,11 +260,11 @@ $total_clubs = fetch_data("SELECT COUNT(*) as count FROM clubs")[0]['count'];
 
 
     <!-- jQuery -->
-    <script src="admin/plugins/jquery/jquery.min.js"></script>
+    <script src="../admin/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="admin/dist/js/adminlte.min.js"></script>
+    <script src="../admin/dist/js/adminlte.min.js"></script>
     <!-- Chart.js Script for Bar Graph -->
     <script>
         $(function() {
